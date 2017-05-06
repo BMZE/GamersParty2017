@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Slime : Enemy {
+public class Archer : Enemy {
 
     
     [Header("Slime settings")]
@@ -122,31 +122,44 @@ public class Slime : Enemy {
     /// <summary>
     /// El slime cuando deteca al jugador se lanza sobre el;
     /// </summary>
-    private void attackPlayer()
+	private void attackPlayer(GameObject player)
     {
-        if (m_timeSinceLastAttack < 0)
-        {
-            gameObject.GetComponent<Rigidbody2D>().AddForce(gameObject.transform.right * m_forwardJumpForce);
-            gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, m_verticalJumpForce));
-            
-            
-            m_controller.Play("attack");
-            
-            m_attacking = true;
+		//gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, m_verticalJumpForce));
 
-            m_timeSinceLastAttack = m_attackingCooldown;
-        }
+		if (lookRight) 
+		{
+			if (transform.position.x < player.transform.position.x - 17) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (5, 0);
+			}
+			else if(transform.position.x < player.transform.position.x - 15)
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0, 0);
+			else
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (-5, 0);
+		} 
+		else 
+		{
+			if (transform.position.x > player.transform.position.x + 17) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (-5, 0);
+			}
+			else if(transform.position.x > player.transform.position.x + 15)
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0, 0);
+			else
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (5, 0);
+		}
+			
+
         //print("jump to the player");
 
     }
 	void OnTriggerStay2D(Collider2D coll)
 	{
+		
 		if (coll.tag == "Player") 
 		{
 			if(coll.gameObject.transform.position.x <= transform.position.x)
-				playerDetected ("BackCollider", null);
+				playerDetected ("BackCollider", coll.gameObject);
 			else if(coll.gameObject.transform.position.x > transform.position.x)
-				playerDetected ("DetectionCollider", null);
+				playerDetected ("DetectionCollider", coll.gameObject);
 		}
 	}
 
@@ -155,7 +168,7 @@ public class Slime : Enemy {
     /// If detected by front, the slime will attack player
     /// </summary>
     /// <param name="colliderName"></param>
-    override public void playerDetected(string colliderName, GameObject playerGO = null)
+	override public void playerDetected(string colliderName, GameObject playerGO = null)
     {
         if (colliderName == "BackCollider")
         {
@@ -165,7 +178,7 @@ public class Slime : Enemy {
 				lookLeft = true;
 				lookRight = false;
 			}
-			attackPlayer ();
+			attackPlayer (playerGO);
         }
         else if (colliderName == "DetectionCollider")
         {
@@ -175,7 +188,7 @@ public class Slime : Enemy {
 				lookLeft = false;
 				lookRight = true;
 			}
-            attackPlayer();
+			attackPlayer(playerGO);
         }
     }
 }
