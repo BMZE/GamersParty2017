@@ -216,6 +216,7 @@ public class PlayerMovement : MonoBehaviour {
                     
                 }
                 m_RigidBody2d.AddForce(new Vector2(0, m_jumpForce));
+                Debug.Log(m_RigidBody2d.velocity.y);
                 isJumping = !isJumping;
                 grounded = !grounded;
             }
