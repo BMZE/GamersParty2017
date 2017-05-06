@@ -91,9 +91,13 @@
     <Compile Include="Assets\Scripts\Fuente.cs" />
     <Compile Include="Assets\Scripts\GroundCheck.cs" />
     <Compile Include="Assets\Scripts\LoadScene.cs" />
+    <Compile Include="Assets\Scripts\Objects\ObjectLogic.cs" />
     <Compile Include="Assets\Scripts\Parallax.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerCombat.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerCombat2.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerLogic.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\Player\Weapon.cs" />
     <Compile Include="Assets\Scripts\Poisoned_gas.cs" />
     <Compile Include="Assets\lightsswitch.cs" />
   </ItemGroup>
