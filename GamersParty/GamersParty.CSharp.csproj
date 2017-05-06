@@ -80,10 +80,13 @@
   <ItemGroup>
     <Compile Include="Assets\GameManager.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
+    <Compile Include="Assets\Scripts\Enemies\Archer.cs" />
     <Compile Include="Assets\Scripts\Enemies\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemyPatrol.cs" />
     <Compile Include="Assets\Scripts\Enemies\EnemySpawn.cs" />
+    <Compile Include="Assets\Scripts\Enemies\FlyingMonster.cs" />
     <Compile Include="Assets\Scripts\Enemies\LifeIndicator.cs" />
+    <Compile Include="Assets\Scripts\Enemies\MonstruoAterrador.cs" />
     <Compile Include="Assets\Scripts\Enemies\Slime.cs" />
     <Compile Include="Assets\Scripts\Fuente.cs" />
     <Compile Include="Assets\Scripts\GroundCheck.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="Assets\Scripts\Player\PlayerCombat.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Poisoned_gas.cs" />
+    <Compile Include="Assets\lightsswitch.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

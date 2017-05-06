@@ -32,7 +32,7 @@ public class GroundCheck : MonoBehaviour {
             if (m_playerRB.velocity.y <= m_playerMovementScript.m_velocityThreshold)
             {
                 //print("duele caida");
-                m_playerCombatScript.receiveDamage(m_playerMovementScript.m_damageFromFall, null);
+      //          m_playerCombatScript.receiveDamage(m_playerMovementScript.m_damageFromFall, null);
             }
             else
             {
