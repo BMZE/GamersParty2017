@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Slime : Enemy {
+public class MonstruoAterrador : Enemy {
 
     
     [Header("Slime settings")]
@@ -43,6 +43,9 @@ public class Slime : Enemy {
     private GameObject m_backCollider;
 	private bool lookRight = true;
 	private bool lookLeft = false;
+	private float posicionActualy;
+	private bool llegada;
+	private float velocidadx = 20;
 
 
     
@@ -50,8 +53,11 @@ public class Slime : Enemy {
     internal override void Awake()
     {
         base.Awake();
+		posicionActualy = transform.position.y - 3;
         m_detectionCollider = gameObject.transform.FindChild("DetectionCollider").gameObject;
         m_backCollider = gameObject.transform.FindChild("BackCollider").gameObject;
+		gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0, -10);
+		llegada = false;
 	}
 
 
@@ -122,31 +128,72 @@ public class Slime : Enemy {
     /// <summary>
     /// El slime cuando deteca al jugador se lanza sobre el;
     /// </summary>
-    private void attackPlayer()
+	private void attackPlayer(GameObject player)
     {
-        if (m_timeSinceLastAttack < 0)
-        {
-            gameObject.GetComponent<Rigidbody2D>().AddForce(gameObject.transform.right * m_forwardJumpForce);
-            gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, m_verticalJumpForce));
-            
-            
-            m_controller.Play("attack");
-            
-            m_attacking = true;
+		//gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, m_verticalJumpForce));
+		//Debug.Log(transform.position.x);
+		//Debug.Log(player.transform.position.x);
 
-            m_timeSinceLastAttack = m_attackingCooldown;
-        }
+		if (transform.position.x >= player.transform.position.x - 7 && !llegada && lookRight) {
+			llegada = true;
+			velocidadx = -10;
+			gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (velocidadx, 3);
+		}
+		if (transform.position.x <= player.transform.position.x + 7 && !llegada && lookLeft) {
+			llegada = true;
+			velocidadx = 10;
+			gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (velocidadx, 3);
+		}
+		if (transform.position.x <= player.transform.position.x - 25 && llegada && lookRight) {
+			llegada = false;
+			velocidadx = 20;
+		}
+		if (transform.position.x >= player.transform.position.x + 25 && llegada && lookLeft) {
+			llegada = false;
+			velocidadx = -20;
+		}
+
+		if (lookRight) 
+		{
+
+			if (transform.position.y <= posicionActualy - 0.5) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (velocidadx, 3);
+				Debug.Log ("Ahora deberia subir");
+			}
+				
+			if (transform.position.y >= posicionActualy + 0.5) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (velocidadx, -3);
+				Debug.Log ("Ahora deberia bajar");
+			}
+				
+		} 
+		else 
+		{
+			if (transform.position.y <= posicionActualy - 0.5) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (velocidadx, 3);
+				Debug.Log ("Ahora deberia subir");
+			}
+
+			if (transform.position.y >= posicionActualy + 0.5) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (velocidadx, -3);
+				Debug.Log ("Ahora deberia bajar");
+			}
+
+		}
+			
+
         //print("jump to the player");
 
     }
 	void OnTriggerStay2D(Collider2D coll)
 	{
+		
 		if (coll.tag == "Player") 
 		{
 			if(coll.gameObject.transform.position.x <= transform.position.x)
-				playerDetected ("BackCollider", null);
+				playerDetected ("BackCollider", coll.gameObject);
 			else if(coll.gameObject.transform.position.x > transform.position.x)
-				playerDetected ("DetectionCollider", null);
+				playerDetected ("DetectionCollider", coll.gameObject);
 		}
 	}
 
@@ -164,8 +211,10 @@ public class Slime : Enemy {
 				gameObject.transform.Rotate(new Vector3(0, 180));
 				lookLeft = true;
 				lookRight = false;
+				velocidadx = -20;
+				//gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (velocidadx, 3);
 			}
-			attackPlayer ();
+			attackPlayer (playerGO);
         }
         else if (colliderName == "DetectionCollider")
         {
@@ -175,7 +224,7 @@ public class Slime : Enemy {
 				lookLeft = false;
 				lookRight = true;
 			}
-            attackPlayer();
+            attackPlayer(playerGO);
         }
     }
 }
