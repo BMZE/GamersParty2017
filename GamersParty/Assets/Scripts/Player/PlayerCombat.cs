@@ -111,6 +111,7 @@ public class PlayerCombat : MonoBehaviour {
 
             StartCoroutine(deactiveAttackZone(attackDuration));
             m_timeSinceLastAttack = m_attackingCooldown;
+            Debug.Log("ataca");
 
         }
   }
