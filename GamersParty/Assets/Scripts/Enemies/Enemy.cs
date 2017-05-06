@@ -38,8 +38,6 @@ public class Enemy : MonoBehaviour {
 
         m_rigidBody = gameObject.GetComponent<Rigidbody2D>();
 
-
-        m_food = gameObject.transform.FindChild("Food").gameObject;
     }
 
 

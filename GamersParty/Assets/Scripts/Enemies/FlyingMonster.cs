@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Slime : Enemy {
+public class FlyingMonster : Enemy {
 
     
     [Header("Slime settings")]
@@ -43,6 +43,7 @@ public class Slime : Enemy {
     private GameObject m_backCollider;
 	private bool lookRight = true;
 	private bool lookLeft = false;
+	private float posicionActualy;
 
 
     
@@ -50,8 +51,10 @@ public class Slime : Enemy {
     internal override void Awake()
     {
         base.Awake();
+		posicionActualy = transform.position.y - 3;
         m_detectionCollider = gameObject.transform.FindChild("DetectionCollider").gameObject;
         m_backCollider = gameObject.transform.FindChild("BackCollider").gameObject;
+		gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (0, -10);
 	}
 
 
@@ -124,26 +127,62 @@ public class Slime : Enemy {
     /// </summary>
     private void attackPlayer()
     {
-        if (m_timeSinceLastAttack < 0)
-        {
-            gameObject.GetComponent<Rigidbody2D>().AddForce(gameObject.transform.right * m_forwardJumpForce);
-            gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, m_verticalJumpForce));
-            
-            
-            m_controller.Play("attack");
-            
-            m_attacking = true;
+		//gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, m_verticalJumpForce));
 
-            m_timeSinceLastAttack = m_attackingCooldown;
-        }
+		if (lookRight) 
+		{
+			if (transform.position.y <= posicionActualy - 1) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (5, 3);
+				Debug.Log ("Ahora deberia subir");
+			}
+				
+			if (transform.position.y >= posicionActualy + 1) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (5, -3);
+				Debug.Log ("Ahora deberia bajar");
+			}
+				
+		} 
+		else 
+		{
+			if (transform.position.y <= posicionActualy - 1) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (-5, 3);
+				Debug.Log ("Ahora deberia subir");
+			}
+
+			if (transform.position.y >= posicionActualy + 1) {
+				gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (-5, -3);
+				Debug.Log ("Ahora deberia bajar");
+			}
+
+		}
+			
+
         //print("jump to the player");
 
     }
 	void OnTriggerStay2D(Collider2D coll)
 	{
+		
 		if (coll.tag == "Player") 
 		{
-			if(coll.gameObject.transform.position.x <= transform.position.x)
+			
+			if(coll.gameObject.transform.position.x - transform.position.x <= 2 && coll.gameObject.transform.position.x - transform.position.x >= -2 ) 
+			{
+				Debug.Log ("Deberia estar quieto");
+				if(lookRight)
+					gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+				else
+					gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+			}
+			else if(coll.gameObject.transform.position.x - transform.position.x <= 5 && coll.gameObject.transform.position.x - transform.position.x >= -5 ) 
+			{
+				Debug.Log ("Deberia estar quieto");
+				if(lookRight)
+					gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(3, -8);
+				else
+					gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(-3, -8);
+			}
+			else if(coll.gameObject.transform.position.x <= transform.position.x)
 				playerDetected ("BackCollider", null);
 			else if(coll.gameObject.transform.position.x > transform.position.x)
 				playerDetected ("DetectionCollider", null);
