@@ -32,7 +32,7 @@ public class Weapon : MonoBehaviour {
            
             if (col.gameObject.tag == "Enemy")
             {
-                GetComponentInParent<PlayerCombat2>().PullTrigger(col.gameObject);
+                GetComponentInParent<PlayerLogic>().PullTrigger(col.gameObject);
             }
         }
         else  Debug.Log("LOOOOOOOOL");

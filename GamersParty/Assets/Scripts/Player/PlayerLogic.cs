@@ -15,8 +15,16 @@ public class PlayerLogic : MonoBehaviour {
     private int maxXP;
     private int experience;
 
-	// Use this for initialization
-	void Start () {
+    //for the attack
+    public GameObject weapon;
+    GameObject enemyCollider;
+    private float force;
+    BoxCollider2D trigger;
+    bool collisionEnemy;
+    private float attackForce;
+
+    // Use this for initialization
+    void Start () {
         attack = 10;
         defense = 10;
         coordination = 10;
@@ -24,8 +32,13 @@ public class PlayerLogic : MonoBehaviour {
         HP = 10;
 
         instance = this;
-       
-       // Debug.Log(HP);
+
+
+        force = 5;
+        weapon.GetComponent<Weapon>().setTrigger(false);
+        collisionEnemy = false;
+        instance = this;
+        // Debug.Log(HP);
     }
 	
 	// Update is called once per frame
@@ -36,10 +49,40 @@ public class PlayerLogic : MonoBehaviour {
         if (HP == 0)
             Debug.Log("NOOB you are DEAD");
 
-       // Debug.Log(HP);
+
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Debug.Log("Blanca te quiero <3");
+            weapon.GetComponent<Weapon>().setTrigger(true);
+
+            if (collisionEnemy)
+            {
+                attackForce = (attack * force);
+                collisionEnemy = false;
+                Debug.Log("mata mata mata mata");
+                if (enemyCollider.GetComponent<SimpleSlime>())
+                {
+                    experience += enemyCollider.GetComponent<SimpleSlime>().getExerience();
+                    enemyCollider.GetComponent<SimpleSlime>().subHP(attackForce);
+                }
+                else if (enemyCollider.GetComponent<SimpleArcher>())
+                {
+                    experience += enemyCollider.GetComponent<SimpleArcher>().getExerience();
+                    enemyCollider.GetComponent<SimpleArcher>().subHP(attackForce);
+                }
+                
+            }
+
+        }
+        // Debug.Log(HP);
     }
 
-
+    public void PullTrigger(GameObject go)
+    {
+        enemyCollider = go;
+        collisionEnemy = true;
+    }
 
     //adds experience to the player
     public void AddExperience()
@@ -68,6 +111,7 @@ public class PlayerLogic : MonoBehaviour {
         defense = def;
         coordination = cor;
         HP = hp;
+
     }
 
     void OnCollisionEnter2D(Collision2D col)
@@ -77,7 +121,7 @@ public class PlayerLogic : MonoBehaviour {
             ObjectLogic.instance.SetObjectStats(attack, defense, coordination, HP, "Apple");
             Destroy(col.gameObject);
         }
-        Debug.Log(HP);
+      //  Debug.Log(HP);
 
     }
 }
