@@ -9,9 +9,9 @@ public class Poisoned_gas : MonoBehaviour {
     public float damageToPlayer = 0.2f;
 
     // Use this for initialization
-    PlayerCombat player;
+    PlayerLogic player;
 	void Start () {
-        player = GameObject.FindGameObjectWithTag("Player").gameObject.GetComponent<PlayerCombat>();
+        player = GameObject.FindGameObjectWithTag("Player").gameObject.GetComponent<PlayerLogic>();
     
     }
 
