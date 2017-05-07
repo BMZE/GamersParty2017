@@ -69,6 +69,7 @@ public class PlayerMovement : MonoBehaviour {
 
     private Object flyStunPrefab;
     private GameObject flyStunGO;
+    private Animator anim;
 
     public bool Moving
     {
@@ -155,8 +156,10 @@ public class PlayerMovement : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-
+        
         m_RigidBody2d = gameObject.GetComponent<Rigidbody2D>();
+        anim = gameObject.GetComponent<Animator>();
+
     }
 
 
@@ -177,9 +180,13 @@ public class PlayerMovement : MonoBehaviour {
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
             moving = true;
+            anim.Play("run");
             isJumping = false;
         }
-            
+        if (Input.GetKey(KeyCode.A))
+            gameObject.GetComponent<SpriteRenderer>().flipX = true;
+        else if (Input.GetKey(KeyCode.D))
+            gameObject.GetComponent<SpriteRenderer>().flipX = false;
 
         //para limitar la velocidad del jugador, del otro modo no lo estaria
         if (m_RigidBody2d.velocity.x > m_maxSpeed)
@@ -206,7 +213,14 @@ public class PlayerMovement : MonoBehaviour {
     {
 
         //Debug.Log(m_RigidBody2d.velocity.y);
-
+        if ((moving == false) && (grounded == true))
+        {
+            anim.Play("idle");
+        }
+        else if (grounded == false)
+            anim.Play("jump");
+        else if (moving == true)
+            anim.Play("run");
         if (Input.GetButtonDown("Vertical") || Input.GetKeyDown("up")) 
         {
             if (grounded || isInWater)
@@ -218,6 +232,7 @@ public class PlayerMovement : MonoBehaviour {
                 m_RigidBody2d.AddForce(new Vector2(0, m_jumpForce));
                 Debug.Log(m_RigidBody2d.velocity.y);
                 isJumping = !isJumping;
+               // anim.Play("jump");
                 grounded = !grounded;
             }
             else
